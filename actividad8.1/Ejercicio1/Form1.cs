@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Ejercicio1.Models;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 namespace Ejercicio1
 {
@@ -65,6 +66,34 @@ namespace Ejercicio1
                 tbNombre.Text = $"{c.Nombre}";
                 tbImporte.Text = $"{c.Importe}";
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string path = openFileDialog1.FileName;
+
+                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+                StreamReader sr = new StreamReader(fs);
+
+                while (!sr.EndOfStream)
+                {
+                   string linea = sr.ReadLine();
+
+                    string dni = linea.Substring(0, 9);
+                    string nombre = linea.Substring(9, 10).Trim();
+                    string importe = linea.Substring(19,9);
+
+                    Cuenta c = new Cuenta(nombre, Convert.ToInt32(dni), Convert.ToDouble(importe));
+                }
+            }
+        }
+
+        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }
     }
 }
